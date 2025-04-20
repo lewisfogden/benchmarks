@@ -1,0 +1,28 @@
+import time
+import sys
+
+def fibo(n: int) -> int:
+    if n < 2:
+        return n
+    else:
+        return fibo(n-1) + fibo(n-2)
+
+loop_count = 21
+target = int(sys.argv[1])
+results = []
+
+for _ in range(loop_count):
+    start = time.perf_counter_ns()
+    x = fibo(target)
+    end = time.perf_counter_ns()
+    results.append(end - start)
+    print(f"{end=} {start=} {end-start=}")
+
+print("codon val:", x)
+print(results)
+results.sort()
+print("Codon min:", results[0])
+print("Codon max:", results[-1])
+print("codon median:", results[loop_count // 2])
+
+# codon build --release codonfibo.codon; ./codonfibo 36

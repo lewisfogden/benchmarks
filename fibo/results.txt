@@ -1,0 +1,90 @@
+
+└─[$]> python -V
+Python 3.12.9
+
+└─[$]> julia -v
+julia version 1.11.5
+
+└─[$]> mojo -v
+mojo 25.3.0.dev2025040705 (dc71b89d)
+
+└─[$]> codon --version
+0.18.2
+
+time user+sys = benchmark time (total completion)
+
+---
+
+└─[$]> ./run_tests.zsh
+Python
+python val: 14930352
+Python min: 1.396410041998024
+Python max: 1.4396502500021597
+python median 1.4061435830080882
+
+real	0m29.679s
+user	0m29.600s
+sys	0m0.061s
+------
+Mojo Run
+mojo val 14930352
+Mojo min: 0.04448799998499453
+Mojo max: 0.04508199996780604
+Mojo median: 0.04459500010125339
+
+real	0m1.211s
+user	0m1.023s
+sys	0m0.047s
+---
+Mojo Build Run
+
+real	0m0.293s
+user	0m0.133s
+sys	0m0.148s
+------
+Run Mojo Build
+mojo val 14930352
+Mojo min: 0.04376199992839247
+Mojo max: 0.06909599993377924
+Mojo median: 0.04414100002031773
+
+real	0m1.117s
+user	0m0.958s
+sys	0m0.004s
+------
+Julia
+Julia value:14930352
+Julia min:0.057791948318481445
+Julia max:0.06116890907287598
+Julia median:0.05793881416320801
+
+real	0m2.385s
+user	0m2.607s
+sys	0m0.198s
+------
+Codon Run Default
+codon val: 14930352
+Codon min: 0.0641567
+Codon max: 0.0645752
+codon median: 0.0642292
+
+real	0m2.572s
+user	0m2.339s
+sys	0m0.089s
+------
+Codon Build Release
+--- BUILD
+
+real	0m1.297s
+user	0m1.258s
+sys	0m0.087s
+--- RUN
+codon val: 14930352
+Codon min: 0
+Codon max: 4.20259e-08
+codon median: 0
+
+real	0m0.224s
+user	0m0.071s
+sys	0m0.003s
+------

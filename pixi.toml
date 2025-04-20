@@ -1,0 +1,11 @@
+[project]
+authors = ["Lewis Fogden <lewisfogden@users.noreply.github.com>"]
+channels = ["https://conda.modular.com/max-nightly", "https://conda.modular.com/max", "https://repo.prefix.dev/modular-community", "conda-forge"]
+name = "benchmarks"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+max = ">=25.3.0.dev2025041922,<26"

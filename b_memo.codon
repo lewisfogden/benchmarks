@@ -1,0 +1,281 @@
+# memoisation with codon
+
+# codon memoization
+
+# memoization / caching with codon (functools.cache etc are not developed yet)
+
+cache_store = Dict[int, int]()   # need to manually configure cache for now.
+
+class ICache:
+    """Integer Cache"""
+    vals: Dict[int, int]
+
+    def __init__(self):
+        self.vals = Dict[int, int]()
+
+    def __getitem__(self, key:int) -> int:
+        return self.vals[key]
+    
+    def __setitem__(self, key:int, value: int):
+        self.vals[key] = value
+
+    def __contains__(self, key:int) -> bool:
+        return key in self.vals
+
+    def __repr__(self) -> str:
+        return "ICache: " + repr(self.vals)
+
+class FCache:
+    """Integer Cache"""
+    vals: Dict[int, float]
+    hits: int
+    misses: int
+
+    def __init__(self):
+        self.vals = Dict[int, float]()
+        self.hits = 0
+        self.misses = 0
+
+    def __getitem__(self, key:int) -> float:
+        return self.vals[key]
+    
+    def __setitem__(self, key:int, value: float):
+        self.vals[key] = value
+
+    def __contains__(self, key:int) -> bool:
+        has_key = key in self.vals
+        if has_key:
+            self.hits += 1
+        else:
+            self.misses += 1
+        return has_key
+
+    def __repr__(self) -> str:
+        return "FCache: " + repr(self.vals) + f"{self.hits=} {self.misses=}"
+
+class Store:
+    si: Dict[str, ICache] # store integers
+    sf: Dict[str, FCache] # store floats
+
+    def __init__(self, i_names: List[str], f_names: List[str]):
+        self.si = Dict[str, ICache]()
+        self.sf = Dict[str, FCache]()
+
+        for i in i_names:
+            self.si[i] = ICache()
+
+        for f in f_names:
+            self.sf[f] = FCache()
+
+    def view(self):
+        print("Store")
+        for i , si in self.si.items():
+            print(f"{i} : {si}")
+
+        for f , sf in self.sf.items():
+            print(f"{f} : {sf}")
+        
+        print("-----")
+
+
+# TODO: is it faster to store as a list (with a maximum length, say of 1200) or a dictionary
+
+def cache(func: function):
+    print(f"Caching {func}")
+    def inner(val: int) -> int:
+        if val in cache_store:
+            print(f"Getting {val} from cache")
+            return cache_store[val]
+        else:
+            print(f"Calculating {val}")
+            result: int = func(val)
+            cache_store[val] = result
+            return result
+    return inner
+
+@cache
+def fibo(n: int) -> int:
+    print(f"fibo calculating {n}")
+    if n < 2:
+        return n
+    else:
+        return fibo(n - 1) + fibo(n - 2)    ## << not accessing decorated function
+
+#fibo_cache = Dict[int, int]()
+fibo_cache = ICache()
+
+def fib2(n: int) -> int:
+    if n in fibo_cache:
+        return fibo_cache[n]
+    else:
+        value = n if n < 2 else fib2(n - 1) + fib2(n - 2)
+        fibo_cache[n] = value
+        return value
+
+print("*"*20)
+
+f4 = fibo(4)
+print(f"{f4=} : {cache_store=}")
+
+print("*"*20)
+
+f6 = fibo(6)
+print(f"{f6=} : {cache_store=}")
+
+print("*"*20)
+
+f6 = fibo(6)
+print(f"{f6=} : {cache_store=}")
+
+f6n = fib2(6)
+print(f"{f6n=} : {fibo_cache=}")
+
+fcache = FCache()
+fcache[5] = 3.421
+fcache[22] = -122.52
+
+print(fcache)
+
+store = Store(['age', 'year', 'month'], ['num_pols_if', 'num_deaths'])
+store.si['age'][5] = 20
+store.sf['num_pols_if'][0] = 1.232
+
+store.view()
+
+class Data:
+    init_pols_if: float
+    sum_assured: float
+    start_age: int
+    term_y: int
+    term_m: int
+
+    def __init__(self):
+        self.init_pols_if = 1.0
+        self.sum_assured = 1254.32
+        self.start_age = 32
+        self.term_y = 20
+        self.term_m = self.term_y * 12
+
+class Model:
+    store: Store # TODO - could split the store, but it's helpful to have in one place.
+    data: Data
+
+    def __init__(self):
+        self.store = Store(
+            i_names=['age'],
+            f_names=['num_pols_if', 'num_deaths'],
+        )
+        self.data = Data()
+
+    """
+    # TEMPLATE CODE, COPY AND REPLACE FF with function name
+    # Add function name to f_names in __init__
+    def FF(self, t: int) -> float:
+        val: float = 0.0
+        if t in self.store.sf['FF']:
+            return self.store.sf['FF'][t]
+        else:
+            ## USER CODE STARTS
+            if t == 0:
+                val = 0 # INITIAL VALUE
+            else:
+                val = 1 # RECURSIVE VALUE
+            ## USER CODE ENDS
+            self.store.sf['FF'][t] = val
+            return val
+    """
+
+    def age(self, t: int) -> int:
+        val: int
+        if t in self.store.si['age']:
+            return self.store.si['age'][t]
+        else:
+            if t == 0:
+                val = self.data.start_age
+            elif t % 12 == 0:
+                val = self.age(t - 1) + 1
+            else:
+                val = self.age(t - 1)
+            self.store.si['age'][t] = val
+            return val       
+
+    def num_deaths(self, t: int) -> float:
+        val: float = 0.0
+        if t in self.store.sf['num_deaths']:
+            return self.store.sf['num_deaths'][t]
+        else:
+            val = self.num_pols_if(t) * 0.005 * self.age(t)
+            self.store.sf['num_deaths'][t] = val
+            return val
+
+
+    def num_pols_if(self, t: int) -> float:
+        val: float = 0.0
+        if t in self.store.sf['num_pols_if']:
+            return self.store.sf['num_pols_if'][t]
+        else:
+            if t == 0:
+                val = self.data.init_pols_if
+            else:
+                val = self.num_pols_if(t - 1) - self.num_deaths(t - 1)
+            self.store.sf['num_pols_if'][t] = val
+            return val
+
+model = Model()
+print(model.num_pols_if(36))   # TODO: force calculation using some sort of looping logic.
+model.store.view()
+
+class Model2:
+    #store: Store # TODO - could split the store, but it's helpful to have in one place.
+    data: Data
+
+    def __init__(self):
+        # initialise all the stores (consistently with their definitions)
+        self.i_age = ICache()
+        self.f_num_deaths = FCache()
+        self.f_num_pols_if = FCache()
+        self.data = Data()
+
+
+    i_age: ICache
+    def age(self, t: int) -> int:
+        val: int
+        if t in self.i_age:
+            return self.i_age[t]
+        else:
+            if t == 0:
+                val = self.data.start_age
+            elif t % 12 == 0:
+                val = self.age(t - 1) + 1
+            else:
+                val = self.age(t - 1)
+            self.i_age[t] = val
+            return val       
+
+    f_num_deaths: FCache
+    def num_deaths(self, t: int) -> float:
+        val: float = 0.0
+        if t in self.f_num_deaths:
+            return self.f_num_deaths[t]
+        else:
+            val = self.num_pols_if(t) * 0.005 * self.age(t)
+            self.f_num_deaths[t] = val
+            return val
+
+    f_num_pols_if: FCache
+    def num_pols_if(self, t: int) -> float:
+        val: float = 0.0
+        if t in self.f_num_pols_if:
+            return self.f_num_pols_if[t]
+        else:
+            if t == 0:
+                val = self.data.init_pols_if
+            else:
+                val = self.num_pols_if(t - 1) - self.num_deaths(t - 1)
+            self.f_num_pols_if[t] = val
+            return val
+
+model2 = Model2()
+print("m1", model.num_pols_if(36))
+print("m2", model2.num_pols_if(36))   # TODO: force calculation using some sort of looping logic.
+print(model2.f_num_pols_if)
