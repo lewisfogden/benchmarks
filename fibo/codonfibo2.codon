@@ -1,7 +1,7 @@
 import time
 import sys
 
-# This version is to see how 
+# This version is to force calculation (and it adds overhead, --release build optimises out)
 
 def fake_inner(n: int, f) -> int:
     val = f(n) - 1

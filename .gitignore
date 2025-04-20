@@ -180,3 +180,4 @@ cython_debug/
 .magic
 fibo/mojofibo
 .DS_Store
+/fibo/codonfibo2.dSYM
