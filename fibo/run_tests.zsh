@@ -1,3 +1,14 @@
+echo Versions - This also verifies everything is working
+python -V
+julia -v
+mojo -v
+echo -n "Codon "
+codon --version
+rustc -V
+echo
+
+echo ------
+
 echo Python
 time python pyfibo.py
 
@@ -16,7 +27,7 @@ echo ------
 
 echo Run Mojo Build
 
-time mojofibo
+time ./mojofibo
 
 echo ------
 
