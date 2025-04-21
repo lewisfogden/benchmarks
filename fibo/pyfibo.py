@@ -6,7 +6,7 @@ def fibo(n: int) -> int:
     else:
         return fibo(n-1) + fibo(n-2)
 
-loop_count = 5  # all the others use 21 but python is slow.
+loop_count = 21
 target = 36
 results = []
 

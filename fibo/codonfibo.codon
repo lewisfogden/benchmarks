@@ -25,4 +25,5 @@ print("Codon min:", results[0])
 print("Codon max:", results[-1])
 print("codon median:", results[loop_count // 2])
 
-# codon build --release codonfibo.codon; ./codonfibo 36
+# time codon build --release codonfibo.codon -o build/codonfibo; time build/codonfibo 36
+# codon run codonfibo.codon

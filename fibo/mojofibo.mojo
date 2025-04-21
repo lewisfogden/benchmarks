@@ -18,8 +18,6 @@ def main():
         t = e - s
         results.append(t)
     print("mojo val", x)
-    #for i in results:
-    #   print(i[])   # note the need to use [] as i is a pointer.  https://docs.modular.com/mojo/manual/control-flow#iterating-over-mojo-collections
     sort(results)
     print("Mojo min:", results[0])
     print("Mojo max:", results[-1])
