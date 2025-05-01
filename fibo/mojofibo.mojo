@@ -4,7 +4,7 @@ fn fibo(n: Int) -> Int:
     if n < 2:
         return n
     else:
-        return fibo(n-1) + fibo(n-2)
+        return fibo(n - 1) + fibo(n - 2)
 
 def main():
     var results = List[Float64]()

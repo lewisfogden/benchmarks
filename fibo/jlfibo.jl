@@ -1,10 +1,10 @@
 using Statistics
 
-function fibo(n::Number)
+function fibo(n::Integer)
     if n < 2
         return n
     else
-        return fibo(n-1) + fibo(n-2)
+        return fibo(n - 1) + fibo(n - 2)
     end
 end
 
