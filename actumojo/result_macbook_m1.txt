@@ -1,0 +1,40 @@
+└─[$]> source testbasic.zsh
+8.761206795565458e-34
+Running Benchmarks - Find
+--------------------------------------------------------------------------------
+Benchmark Report (ms)
+--------------------------------------------------------------------------------
+Mean: 0.17551427734661004
+Total: 2397.174
+Iters: 13658
+Warmup Total: 0.177
+Fastest Mean: 0.17551427734661004
+Slowest Mean: 0.17551427734661004
+
+./basicmodelfind  5.36s user 0.01s system 93% cpu 5.769 total
+8.761206795565458e-34
+Running Benchmark - Try
+--------------------------------------------------------------------------------
+Benchmark Report (ms)
+--------------------------------------------------------------------------------
+Mean: 0.2125572
+Total: 2125.572
+Iters: 10000
+Warmup Total: 0.216
+Fastest Mean: 0.2125572
+Slowest Mean: 0.2125572
+
+./basicmodeltrys  3.36s user 0.01s system 95% cpu 3.548 total
+8.761206795565458e-34
+Running Benchmarks - Raises
+--------------------------------------------------------------------------------
+Benchmark Report (ms)
+--------------------------------------------------------------------------------
+Mean: 0.1976667
+Total: 1976.667
+Iters: 10000
+Warmup Total: 0.196
+Fastest Mean: 0.1976667
+Slowest Mean: 0.1976667
+
+./basicmodelraises  3.20s user 0.01s system 94% cpu 3.416 total
